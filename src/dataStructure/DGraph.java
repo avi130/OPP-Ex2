@@ -1,5 +1,6 @@
 package dataStructure;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 
-public class DGraph implements graph {
+public class DGraph implements graph,Serializable {
 //Map<node_data, edge_data> hmap1 = new HashMap<node_data,edge_data>();
 Map<Integer, node_data> hmap1 = new HashMap<Integer,node_data>();
 Map<Integer, HashMap<Integer, edge_data>> hmap2 = new HashMap<Integer,HashMap<Integer, edge_data>>();
@@ -86,7 +87,7 @@ public DGraph()
 	@Override
 	public node_data removeNode(int key) {
 		// TODO Auto-generated method stub
-		
+	/*	
 		if(hmap1.containsKey(key)) {
 			node_data temp=hmap1.get(key);
 			Iterator<Entry<Integer, HashMap<Integer, edge_data>>> it = hmap2.entrySet().iterator();
@@ -109,6 +110,28 @@ public DGraph()
 			}
 		
 			return null;
+		*/
+		if(hmap1.containsKey(key)) {
+			node_data temp=hmap1.get(key);
+			Iterator<Entry<Integer, HashMap<Integer, edge_data>>> it = hmap1.entrySet().iterator();
+			// iterating every set of entry in the HashMap. 
+			while (it.hasNext()) {
+				Map.Entry<Integer, HashMap<Integer, edge_data>> set = it.next();
+				int x=set.getKey();//x==source
+				if(x==key && hmap2.containsKey(x) ){
+					hmap2.remove(key);
+					MC =+ hmap2.get(key).size();
+					
+				}
+				if (x!= key && hmap2.containsKey(x) && hmap2.get(x).containsKey(key)) {
+					hmap2.get(x).remove(key);
+					MC++;
+				}
+			}
+			hmap1.remove(key);
+			MC++;
+		}
+			return null;
 			
 		
 		
@@ -118,7 +141,7 @@ public DGraph()
 	@Override
 	public edge_data removeEdge(int src, int dest) {
 		// TODO Auto-generated method stub
-		
+	/*	
 		if(hmap1.containsKey(src) && hmap1.containsKey(dest)) {
 			if(hmap1.containsKey(src) == hmap1.containsKey(dest)) {
 				removeNode(src);
@@ -129,14 +152,16 @@ public DGraph()
 							removeNode(src);
 					if(check.getValue().get
 						removeNode(dest);
-				}
-				
-				
+				}	
 				}	
 		}
-		
-		
 		return null;
+		*/
+		if(hmap2.containsKey(src) && hmap2.get(src).containsKey(dest)) 
+			hmap2.get(src).remove();
+			
+		else 
+			return null;	
 	}
 
 	@Override
