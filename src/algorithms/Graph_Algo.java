@@ -13,11 +13,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import dataStructure.DGraph;
+import dataStructure.edge_data;
 import dataStructure.graph;
+import dataStructure.node;
 import dataStructure.node_data;
 /**
  * This empty class represents the set of graph-theory algorithms
@@ -27,7 +30,7 @@ import dataStructure.node_data;
  */
 public class Graph_Algo implements graph_algorithms, Serializable{
 
-	public graph mygraph;
+	 graph mygraph;
 	
 	
 	@Override
@@ -35,21 +38,21 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 		// TODO Auto-generated method stub
 		mygraph=g;
 	}
-
 	@Override
 	public void init(String file_name) {
+		
 		// TODO Auto-generated method stub
 		try {
-			FileInputStream fi = new FileInputStream(new File(file_name));
+			FileInputStream fi = new FileInputStream(file_name);
 			ObjectInputStream oi = new ObjectInputStream(fi);
+			Graph_Algo ee = (Graph_Algo)oi.readObject();
 
-			graph pr1= (graph)oi.readObject();
+			this.mygraph= ee.mygraph;
 			
-			System.out.println(pr1.toString());
+			System.out.println(this.mygraph.toString());
 
 			oi.close();
-			fi.close();	
-			
+			fi.close();			
 		}
 		catch (FileNotFoundException e)
 		{
@@ -62,7 +65,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 		catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	
 
 	}
 
@@ -76,7 +79,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 			ObjectOutputStream o = new ObjectOutputStream(f);
 
 			// Write objects to file
-			o.writeObject(this.mygraph);
+			o.writeObject(this);
 			o.close();
 			f.close();			
 			
@@ -89,7 +92,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 		{
 			System.out.println("Error initializing stream");
 		}
-
+		
 	}
 	
 
@@ -102,6 +105,8 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	@Override
 	public double shortestPathDist(int src, int dest) {
 		// TODO Auto-generated method stub
+		
+		
 		return 0;
 	}
 
@@ -124,29 +129,28 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	@Override
 	public graph copy() {//made with Serializable copy(same as save\read from file)
 		// TODO Auto-generated method stub
-		graph x= new DGraph();
-		Object obj = new DGraph();
-	        try {
-	            // Write the object out to a byte array
-	            ByteArrayOutputStream myarray = new ByteArrayOutputStream();
-	            ObjectOutputStream write = new ObjectOutputStream(myarray);
-	            write.writeObject(this.mygraph);
-	            write.flush();
-	            write.close();
+		Object obj = null;
+        try {
+            // Write the object out to a byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(bos);
+            out.writeObject(this.mygraph);
+            out.flush();
+            out.close();
 
-	            // Make an input stream from the byte array and read
-	            // a copy of the object back in.
-	            ObjectInputStream insert = new ObjectInputStream( new ByteArrayInputStream(myarray.toByteArray()));
-	            obj = insert.readObject();
-	        }
-	        catch(IOException e) {
-	            e.printStackTrace();
-	        }
-	        catch(ClassNotFoundException cnfe) {
-	            cnfe.printStackTrace();
-	        }
-	        x=(graph)obj;
-	        return x;
-	    }
-		
+            // Make an input stream from the byte array and read
+            // a copy of the object back in.
+            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+            obj = in.readObject();
+            
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
+        }
+        return (graph)obj;
+
+	}
 }
