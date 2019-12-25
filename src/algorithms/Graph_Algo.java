@@ -15,13 +15,16 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import dataStructure.DGraph;
+import dataStructure.edge;
 import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node;
 import dataStructure.node_data;
+import utils.Point3D;
 /**
  * This empty class represents the set of graph-theory algorithms
  * which should be implemented as part of Ex2 - Do edit this class.
@@ -30,9 +33,9 @@ import dataStructure.node_data;
  */
 public class Graph_Algo implements graph_algorithms, Serializable{
 
-	 graph mygraph;
-	
-	
+	graph mygraph;
+
+
 	@Override
 	public void init(graph g) {
 		// TODO Auto-generated method stub
@@ -40,7 +43,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	}
 	@Override
 	public void init(String file_name) {
-		
+
 		// TODO Auto-generated method stub
 		try {
 			FileInputStream fi = new FileInputStream(file_name);
@@ -48,7 +51,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 			Graph_Algo ee = (Graph_Algo)oi.readObject();
 
 			this.mygraph= ee.mygraph;
-			
+
 			System.out.println(this.mygraph.toString());
 
 			oi.close();
@@ -69,8 +72,8 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 
 	}
 
-	
-	
+
+
 	@Override
 	public void save(String file_name) {
 		// TODO Auto-generated method stub
@@ -82,7 +85,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 			o.writeObject(this);
 			o.close();
 			f.close();			
-			
+
 		}
 		catch (FileNotFoundException e)
 		{
@@ -92,65 +95,209 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 		{
 			System.out.println("Error initializing stream");
 		}
-		
+
 	}
-	
+
 
 	@Override
 	public boolean isConnected() {
 		// TODO Auto-generated method stub
-		return false;
+		Collection<node_data> nodes=this.mygraph.getV();
+		
+		for(node_data currentNode :nodes) { 
+			
+			for(node_data checkNode :nodes) {
+				if(shortestPathDist(currentNode.getKey(),checkNode.getKey())== -1){
+					System.out.println(checkNode.getKey());
+					return false;
+				}
+				
+			}
+		}
+		
+
+		return true;
 	}
+
+	
+	
+	
+	
+	
+	public int getMInWeight(Collection<node_data> nodes) {
+		// TODO Auto-generated method stub
+		double x=0;
+		double min=Integer.MAX_VALUE;
+		int minkey=-1;
+		for(node_data current :nodes) {
+			if(current.getTag()!=1) {
+				x=current.getWeight();
+				if(x<min ) {
+					min=x;
+					minkey=current.getKey();
+				}
+			}
+		}
+
+		return minkey ;
+	}
+
+
+
 
 	@Override
 	public double shortestPathDist(int src, int dest) {
 		// TODO Auto-generated method stub
 		
-		
-		return 0;
+		Collection<node_data> nodes=this.mygraph.getV();
+		int size=nodes.size();
+		int i=0;
+		for(node_data currentNode :nodes) { //change the weigh to mat for all
+			currentNode.setWeight(Integer.MAX_VALUE);
+		}
+		this.mygraph.getNode(src).setWeight(0); //change the weigh to 0 in the src
+
+
+
+		while(i!=size) {
+			int MinNotVisited= getMInWeight(nodes); //gets the min weight node that we didnt visited already
+			if(MinNotVisited !=-1 ) {
+				mygraph.getNode(MinNotVisited).setTag(1);
+
+				Collection<edge_data> edges=this.mygraph.getE(MinNotVisited);
+				if(edges!=null) {
+					for(edge_data currentEdge :edges) { //runs all over the adges that goes from current node
+						if(currentEdge.getTag()!=1) { //change only the nodes that we didnt visited yet
+							int destKey=currentEdge.getDest();
+							double canEdgeWeight = currentEdge.getWeight()+ mygraph.getNode(currentEdge.getSrc()).getWeight();
+							if(mygraph.getNode(destKey).getWeight() > canEdgeWeight) { //if the current weight is bigger then what i found so change
+								//mygraph.getNode(destKey).setInfo(""+mygraph.getNode(currentEdge.getSrc()).getKey());
+								mygraph.getNode(destKey).setWeight(canEdgeWeight);
+							}//+mygraph.getNode(currentEdge.getSrc()).getWeight()
+						}
+					}
+				}
+			}
+			i++;
+		}
+
+		if(mygraph.getNode(dest).getTag()!=0) {
+
+			return mygraph.getNode(dest).getWeight();
+		}
+
+
+		else return -1;
 	}
+
+
+
 
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
 		// TODO Auto-generated method stub
+		List <node_data> ans=new LinkedList<node_data>();
+
+		Collection<node_data> nodes=this.mygraph.getV();
+		int size=nodes.size();
+		int i=0;
+		for(node_data currentNode :nodes) { //change the weigh to mat for all
+			currentNode.setWeight(Integer.MAX_VALUE);
+			currentNode.setInfo("");
+		}
+		this.mygraph.getNode(src).setWeight(0); //change the weigh to 0 in the src
+		this.mygraph.getNode(src).setInfo(""+this.mygraph.getNode(src).getKey());
+
+		
+		while(i!=size) {
+			int MinNotVisited= getMInWeight(nodes); //gets the min weight node that we didnt visited already
+			if(MinNotVisited !=-1 ) {
+				mygraph.getNode(MinNotVisited).setTag(1);
+
+				Collection<edge_data> edges=this.mygraph.getE(MinNotVisited);
+				if(edges!=null) {
+					for(edge_data currentEdge :edges) { //runs all over the adges that goes from current node
+						if(currentEdge.getTag()!=1) { //change only the nodes that we didnt visited yet
+							int destKey=currentEdge.getDest();
+							double canEdgeWeight = currentEdge.getWeight()+ mygraph.getNode(currentEdge.getSrc()).getWeight();
+							if(mygraph.getNode(destKey).getWeight() > canEdgeWeight) { //if the current weight is bigger then what i found so change
+								mygraph.getNode(destKey).setWeight(canEdgeWeight);
+					//			mygraph.getNode(destKey).setInfo(mygraph.getNode(currentEdge.getSrc()).getInfo());
+								String temp=""+mygraph.getNode(MinNotVisited).getKey();
+								mygraph.getNode(destKey).setInfo(temp);
+							}
+						}
+					}
+				}
+			}
+			i++;
+		}
+
+		if(mygraph.getNode(dest).getTag()!=0) {
+			
+			ans.add(mygraph.getNode(dest));
+					
+			while(mygraph.getNode(dest).getKey()!=mygraph.getNode(src).getKey()) {
+				
+				int addNode =Integer.parseInt(mygraph.getNode(dest).getInfo());
+				ans.add(mygraph.getNode(addNode));
+				dest=addNode;
+			}
+			List <node_data> ansRevers=new LinkedList<node_data>();
+			
+			for (int j = 0; j < ans.size(); j++) {
+				ansRevers.add(ans.get(ans.size()-1-j));
+						
+			}
+			
+			return ansRevers;
+		}
+
+
+
+
 		return null;
 	}
 
 	@Override
 	public List<node_data> TSP(List<Integer> targets) {
 		// TODO Auto-generated method stub
+
 		return null;
 	}
 
-	
-	
-	
-	
+
+
+
+
 	@Override
 	public graph copy() {//made with Serializable copy(same as save\read from file)
 		// TODO Auto-generated method stub
 		Object obj = null;
-        try {
-            // Write the object out to a byte array
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            ObjectOutputStream out = new ObjectOutputStream(bos);
-            out.writeObject(this.mygraph);
-            out.flush();
-            out.close();
+		try {
+			// Write the object out to a byte array
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ObjectOutputStream out = new ObjectOutputStream(bos);
+			out.writeObject(this.mygraph);
+			out.flush();
+			out.close();
 
-            // Make an input stream from the byte array and read
-            // a copy of the object back in.
-            ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
-            obj = in.readObject();
-            
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-        catch(ClassNotFoundException cnfe) {
-            cnfe.printStackTrace();
-        }
-        return (graph)obj;
+			// Make an input stream from the byte array and read
+			// a copy of the object back in.
+			ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
+			obj = in.readObject();
+
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		catch(ClassNotFoundException cnfe) {
+			cnfe.printStackTrace();
+		}
+		return (graph)obj;
 
 	}
+
+
+
 }
