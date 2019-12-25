@@ -10,13 +10,13 @@ import java.util.Set;
 
 
 public class DGraph implements graph,Serializable {
-//Map<node_data, edge_data> hmap1 = new HashMap<node_data,edge_data>();
+
 Map<Integer, node_data> hmap1 = new HashMap<Integer,node_data>();
 Map<Integer, HashMap<Integer, edge_data>> hmap2 = new HashMap<Integer,HashMap<Integer, edge_data>>();
 
 
 int MC=0;
-
+int edgesize=0;
 
 
 public DGraph() 
@@ -24,6 +24,19 @@ public DGraph()
 	hmap1=new HashMap<Integer,node_data>();
 	hmap2=new HashMap<Integer, HashMap<Integer,edge_data>>();
 }
+
+
+public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
+	
+	for(node_data n : nodes ) {
+		hmap1.put(n.getKey(),n);
+	}
+	for ( edge_data e :edges) {
+		connect(e.getSrc(), e.getDest(), e.getWeight());
+	}
+}
+
+
 	@Override
 	public node_data getNode(int key) {
 		// TODO Auto-generated method stub	
@@ -40,6 +53,7 @@ public DGraph()
 			return null;
 		else
 			return hmap2.get(src).get(dest);
+	 
 	}
 
 	@Override
@@ -49,25 +63,37 @@ public DGraph()
 			hmap1.put(n.getKey(), n);
 		MC++;
 		
+		
 	}
 
 	@Override
 	public void connect(int src, int dest, double w) {
 		// TODO Auto-generated method stub
-		if(src!=dest && w>0) {
+		if(src!=dest && w>=0) {
+			
 			if(hmap1.containsKey(src)&&hmap1.containsKey(dest)) {
-				
-				edge_data tempdata=new edge(src,  dest,  w);//new edge	
-				HashMap<Integer, edge_data> temp=new HashMap<Integer, edge_data>();
-				temp.put(dest, tempdata);
-				if(!this.hmap2.get(src).containsKey(dest)) {//if the edge is not exist
-					hmap2.put(src, temp);
-					MC++;
+				MC++;
+				    if(hmap2.containsKey(src)==false) //check if there is a hashmap for key src
+					{
+						HashMap<Integer, edge_data> edgesVer=new HashMap<Integer,edge_data> ();
+						hmap2.put(src, edgesVer);
+						System.out.println(edgeSize());
+					}
+				    if(hmap2.get(src).containsKey(dest)==false)//check if the edge is already exist
+					{
+						edge_data edge=new edge(src,dest,w);
+						hmap2.get(src).put(dest,edge);
+						edgesize++;
+						System.out.println(edgeSize());
+					}
+					
 				}
 			}
-		}
+		
 	}
 
+	
+	
 	@Override
 	public Collection<node_data> getV() {
 		// TODO Auto-generated method stub	
@@ -78,7 +104,7 @@ public DGraph()
 	@Override
 	public Collection<edge_data> getE(int node_id) {
 		// TODO Auto-generated method stub
-		if(hmap1.containsKey(node_id)) {
+		if(hmap1.containsKey(node_id)&& hmap2.containsKey(node_id)) {
 			return hmap2.get(node_id).values();	
 		}
 		return null;
@@ -87,50 +113,29 @@ public DGraph()
 	@Override
 	public node_data removeNode(int key) {
 		// TODO Auto-generated method stub
-	/*	
 		if(hmap1.containsKey(key)) {
 			node_data temp=hmap1.get(key);
-			Iterator<Entry<Integer, HashMap<Integer, edge_data>>> it = hmap2.entrySet().iterator();
-			// iterating every set of entry in the HashMap. 
-			while (it.hasNext()) {
-				Map.Entry<Integer, HashMap<Integer, edge_data>> set = it.next();
-				int x=set.getKey();//x==source
-				if(x==key) {
+			for(Entry<Integer, node_data> entry : hmap1.entrySet()) {
+				int currentKey=entry.getKey();
+				if(currentKey==key && hmap2.containsKey(key)) {
+					int a=hmap2.get(key).size();
 					hmap2.remove(key);
-			}
-				if(set.getValue().get(key)!=null) {
-					it.remove();
-				}
-			}
-				hmap2.remove(key);	
-				hmap1.remove(key);
-				MC++;
-				hmap2.con)
-			return temp;
-			}
-		
-			return null;
-		*/
-		if(hmap1.containsKey(key)) {
-			node_data temp=hmap1.get(key);
-			Iterator<Entry<Integer, HashMap<Integer, edge_data>>> it = hmap1.entrySet().iterator();
-			// iterating every set of entry in the HashMap. 
-			while (it.hasNext()) {
-				Map.Entry<Integer, HashMap<Integer, edge_data>> set = it.next();
-				int x=set.getKey();//x==source
-				if(x==key && hmap2.containsKey(x) ){
-					hmap2.remove(key);
-					MC =+ hmap2.get(key).size();
+					edgesize=edgesize-a;
 					
 				}
-				if (x!= key && hmap2.containsKey(x) && hmap2.get(x).containsKey(key)) {
-					hmap2.get(x).remove(key);
-					MC++;
+				if(currentKey!=key && hmap2.get(currentKey).containsKey(key)) {
+					int a=hmap2.get(currentKey).size();
+					hmap2.get(currentKey).remove(key);
+					edgesize=edgesize-a;
+					
 				}
+				
 			}
-			hmap1.remove(key);
 			MC++;
-		}
+			return temp;	
+			}
+		
+		
 			return null;
 			
 		
@@ -141,27 +146,32 @@ public DGraph()
 	@Override
 	public edge_data removeEdge(int src, int dest) {
 		// TODO Auto-generated method stub
-	/*	
-		if(hmap1.containsKey(src) && hmap1.containsKey(dest)) {
-			if(hmap1.containsKey(src) == hmap1.containsKey(dest)) {
-				removeNode(src);
+
+		if(this.hmap1.containsKey(src)&&this.hmap1.containsKey(dest))
+		{
+			MC++;
+			if(this.hmap2.get(src).containsKey(dest))
+			{
+		/*		if (hmap2.get(src).size()==1)
+				{
+					edge_data edge=this.hmap2.get(src).get(dest);
+					 this.hmap2.remove(src);
+					 return edge;
+				}
+				else
+				{
+				*/
+				int a=this.hmap2.get(src).size();
+				edgesize=edgesize-a;
+				return this.hmap2.get(src).remove(dest);
+			//	}
+				
 			}
-			else {
-				for (Map.Entry<Integer, HashMap<Integer, edge_data>> check : hmap2.entrySet()) {
-					if(check.getValue().get(dest)) 
-							removeNode(src);
-					if(check.getValue().get
-						removeNode(dest);
-				}	
-				}	
+			else 
+				throw new RuntimeException ("this edge is not exist");
 		}
-		return null;
-		*/
-		if(hmap2.containsKey(src) && hmap2.get(src).containsKey(dest)) 
-			hmap2.get(src).remove();
-			
-		else 
-			return null;	
+		else
+			throw new RuntimeException ("one of the nodes not exist");
 	}
 
 	@Override
@@ -174,13 +184,14 @@ public DGraph()
 	public int edgeSize() {
 		// TODO Auto-generated method stub
 		//????
-		return this.hmap2.size();
+		return edgesize;
 		
 	}
 
 	@Override
 	public int getMC() {
 		// TODO Auto-generated method stub
+		System.out.println(MC+" -mc");
 		return MC;
 	}
 

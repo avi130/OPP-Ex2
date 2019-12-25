@@ -1,5 +1,6 @@
 package dataStructure;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -7,7 +8,7 @@ import java.util.Map;
 
 import utils.Point3D;
 
-public class node implements node_data {
+public class node implements node_data,Serializable {
 	int key;
 	Point3D location;
 	int value;
@@ -15,9 +16,31 @@ public class node implements node_data {
 	String info;
 	int tag;
 	
+	public node(node_data nodedata) {
+		this.key=nodedata.getKey();
+		this.location=nodedata.getLocation();
+		//this.value=nodedata.getvalue;
+		this.weight=nodedata.getWeight();
+		this.info=nodedata.getInfo();
+		this.tag=nodedata.getTag();
+	
+	
+	}
+	
+	
+	
+	
 	public node(int key) {
 		this.key=key;
 		this.location=null;
+		this.value=Integer.MAX_VALUE;
+		this.weight=0;
+		this.info="";
+		this.tag=0;
+	}
+	public node(Point3D location) {
+		this.key=0;
+		this.location=location;
 		this.value=Integer.MAX_VALUE;
 		this.weight=0;
 		this.info="";
