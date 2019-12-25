@@ -85,12 +85,19 @@ public class node implements node_data,Serializable {
 	}
 
 	
+	public void setValue(int p) {
+		// TODO Auto-generated method stub
+		this.value=p;
+	}
+	
+	
 	public boolean contains(int key) {
 		// TODO Auto-generated method stub
 		if(this.key==key)
 			return true ;
 		return false;
 	}
+	
 	
 	@Override
 	public int getKey() {

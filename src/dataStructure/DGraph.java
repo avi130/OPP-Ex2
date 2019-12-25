@@ -56,13 +56,13 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 	 
 	}
 
-	@Override
+	
 	public void addNode(node_data n) {
 		// TODO Auto-generated method stub
-		if((!hmap1.containsKey(n.getKey())))
+		if((!hmap1.containsKey(n.getKey()))) {
 			hmap1.put(n.getKey(), n);
 		MC++;
-		
+		}
 		
 	}
 
@@ -77,14 +77,15 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 					{
 						HashMap<Integer, edge_data> edgesVer=new HashMap<Integer,edge_data> ();
 						hmap2.put(src, edgesVer);
-						System.out.println(edgeSize());
+						
 					}
 				    if(hmap2.get(src).containsKey(dest)==false)//check if the edge is already exist
 					{
 						edge_data edge=new edge(src,dest,w);
 						hmap2.get(src).put(dest,edge);
 						edgesize++;
-						System.out.println(edgeSize());
+						
+						
 					}
 					
 				}
@@ -92,6 +93,9 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 		
 	}
 
+	
+	
+	
 	
 	
 	@Override
@@ -191,7 +195,6 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 	@Override
 	public int getMC() {
 		// TODO Auto-generated method stub
-		System.out.println(MC+" -mc");
 		return MC;
 	}
 
