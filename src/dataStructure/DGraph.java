@@ -5,36 +5,39 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import elements.edge;
+
 import java.util.Iterator;
 import java.util.Set;
 
 
 public class DGraph implements graph,Serializable {
 
-Map<Integer, node_data> hmap1 = new HashMap<Integer,node_data>();
-Map<Integer, HashMap<Integer, edge_data>> hmap2 = new HashMap<Integer,HashMap<Integer, edge_data>>();
+	Map<Integer, node_data> hmap1 = new HashMap<Integer,node_data>();
+	Map<Integer, HashMap<Integer, edge_data>> hmap2 = new HashMap<Integer,HashMap<Integer, edge_data>>();
 
 
-int MC=0;
-int edgesize=0;
+	int MC=0;
+	int edgesize=0;
 
 
-public DGraph() 
-{
-	hmap1=new HashMap<Integer,node_data>();
-	hmap2=new HashMap<Integer, HashMap<Integer,edge_data>>();
-}
-
-
-public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
-	
-	for(node_data n : nodes ) {
-		hmap1.put(n.getKey(),n);
+	public DGraph() 
+	{
+		hmap1=new HashMap<Integer,node_data>();
+		hmap2=new HashMap<Integer, HashMap<Integer,edge_data>>();
 	}
-	for ( edge_data e :edges) {
-		connect(e.getSrc(), e.getDest(), e.getWeight());
+
+
+	public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
+
+		for(node_data n : nodes ) {
+			hmap1.put(n.getKey(),n);
+		}
+		for ( edge_data e :edges) {
+			connect(e.getSrc(), e.getDest(), e.getWeight());
+		}
 	}
-}
 
 
 	@Override
@@ -53,58 +56,58 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 			return null;
 		else
 			return hmap2.get(src).get(dest);
-	 
+
 	}
 
-	
+
 	public void addNode(node_data n) {
 		// TODO Auto-generated method stub
 		if((!hmap1.containsKey(n.getKey()))) {
 			hmap1.put(n.getKey(), n);
-		MC++;
+			MC++;
 		}
-		
+
 	}
 
 	@Override
 	public void connect(int src, int dest, double w) {
 		// TODO Auto-generated method stub
 		if(src!=dest && w>=0) {
-			
+
 			if(hmap1.containsKey(src)&&hmap1.containsKey(dest)) {
 				MC++;
-				    if(hmap2.containsKey(src)==false) //check if there is a hashmap for key src
-					{
-						HashMap<Integer, edge_data> edgesVer=new HashMap<Integer,edge_data> ();
-						hmap2.put(src, edgesVer);
-						
-					}
-				    if(hmap2.get(src).containsKey(dest)==false)//check if the edge is already exist
-					{
-						edge_data edge=new edge(src,dest,w);
-						hmap2.get(src).put(dest,edge);
-						edgesize++;
-						
-						
-					}
-					
+				if(hmap2.containsKey(src)==false) //check if there is a hashmap for key src
+				{
+					HashMap<Integer, edge_data> edgesVer=new HashMap<Integer,edge_data> ();
+					hmap2.put(src, edgesVer);
+
 				}
+				if(hmap2.get(src).containsKey(dest)==false)//check if the edge is already exist
+				{
+					edge_data edge=new edge(src,dest,w);
+					hmap2.get(src).put(dest,edge);
+					edgesize++;
+
+
+				}
+
 			}
-		
+		}
+
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
 	@Override
 	public Collection<node_data> getV() {
 		// TODO Auto-generated method stub	
 		return hmap1.values();
 	}
 
-	
+
 	@Override
 	public Collection<edge_data> getE(int node_id) {
 		// TODO Auto-generated method stub
@@ -125,28 +128,27 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 					int a=hmap2.get(key).size();
 					hmap2.remove(key);
 					edgesize=edgesize-a;
-					
+
 				}
 				if(currentKey!=key && hmap2.get(currentKey).containsKey(key)) {
 					int a=hmap2.get(currentKey).size();
 					hmap2.get(currentKey).remove(key);
 					edgesize=edgesize-a;
-					
+
 				}
-				
+
 			}
 			MC++;
 			return temp;	
-			}
-		
-		
-			return null;
-			
-		
-		
+		}
+
+
+		return null;
+
+
+
 	}
-	
-	
+
 	@Override
 	public edge_data removeEdge(int src, int dest) {
 		// TODO Auto-generated method stub
@@ -156,7 +158,7 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 			MC++;
 			if(this.hmap2.get(src).containsKey(dest))
 			{
-		/*		if (hmap2.get(src).size()==1)
+				/*		if (hmap2.get(src).size()==1)
 				{
 					edge_data edge=this.hmap2.get(src).get(dest);
 					 this.hmap2.remove(src);
@@ -164,12 +166,12 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 				}
 				else
 				{
-				*/
+				 */
 				int a=this.hmap2.get(src).size();
 				edgesize=edgesize-a;
 				return this.hmap2.get(src).remove(dest);
-			//	}
-				
+				//	}
+
 			}
 			else 
 				throw new RuntimeException ("this edge is not exist");
@@ -189,7 +191,7 @@ public DGraph(Collection<node_data> nodes, Collection<edge_data> edges) {
 		// TODO Auto-generated method stub
 		//????
 		return edgesize;
-		
+
 	}
 
 	@Override
