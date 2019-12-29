@@ -15,15 +15,17 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import dataStructure.DGraph;
-import dataStructure.edge;
 import dataStructure.edge_data;
 import dataStructure.graph;
-import dataStructure.node;
 import dataStructure.node_data;
+import elements.edge;
+import elements.node;
 import utils.Point3D;
 /**
  * This empty class represents the set of graph-theory algorithms
@@ -103,27 +105,27 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	public boolean isConnected() {
 		// TODO Auto-generated method stub
 		Collection<node_data> nodes=this.mygraph.getV();
-		
+
 		for(node_data currentNode :nodes) { 
-			
+
 			for(node_data checkNode :nodes) {
 				if(shortestPathDist(currentNode.getKey(),checkNode.getKey())== -1){
+					System.out.println(currentNode.getKey());
 					System.out.println(checkNode.getKey());
 					return false;
 				}
-				
+
 			}
 		}
-		
-
 		return true;
 	}
 
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	public int getMInWeight(Collection<node_data> nodes) {
 		// TODO Auto-generated method stub
 		double x=0;
@@ -148,46 +150,52 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	@Override
 	public double shortestPathDist(int src, int dest) {
 		// TODO Auto-generated method stub
-		
-		Collection<node_data> nodes=this.mygraph.getV();
-		int size=nodes.size();
-		int i=0;
-		for(node_data currentNode :nodes) { //change the weigh to mat for all
-			currentNode.setWeight(Integer.MAX_VALUE);
-		}
-		this.mygraph.getNode(src).setWeight(0); //change the weigh to 0 in the src
+		try {
+			Collection<node_data> nodes=this.mygraph.getV();
+			int size=nodes.size();
+			int i=0;
+
+			for(node_data currentNode :nodes) { //change the weigh to mat for all
+				currentNode.setWeight(Integer.MAX_VALUE);
+				currentNode.setTag(0);
+			}
+			this.mygraph.getNode(src).setWeight(0); //change the weigh to 0 in the src
 
 
 
-		while(i!=size) {
-			int MinNotVisited= getMInWeight(nodes); //gets the min weight node that we didnt visited already
-			if(MinNotVisited !=-1 ) {
-				mygraph.getNode(MinNotVisited).setTag(1);
+			while(i!=size) {
+				int MinNotVisited= getMInWeight(nodes); //gets the min weight node that we didnt visited already
+				if(MinNotVisited !=-1 ) {
+					mygraph.getNode(MinNotVisited).setTag(1);
 
-				Collection<edge_data> edges=this.mygraph.getE(MinNotVisited);
-				if(edges!=null) {
-					for(edge_data currentEdge :edges) { //runs all over the adges that goes from current node
-						if(currentEdge.getTag()!=1) { //change only the nodes that we didnt visited yet
-							int destKey=currentEdge.getDest();
-							double canEdgeWeight = currentEdge.getWeight()+ mygraph.getNode(currentEdge.getSrc()).getWeight();
-							if(mygraph.getNode(destKey).getWeight() > canEdgeWeight) { //if the current weight is bigger then what i found so change
-								//mygraph.getNode(destKey).setInfo(""+mygraph.getNode(currentEdge.getSrc()).getKey());
-								mygraph.getNode(destKey).setWeight(canEdgeWeight);
-							}//+mygraph.getNode(currentEdge.getSrc()).getWeight()
+					Collection<edge_data> edges=this.mygraph.getE(MinNotVisited);
+					if(edges!=null) {
+						for(edge_data currentEdge :edges) { //runs all over the adges that goes from current node
+							if(currentEdge.getTag()!=1) { //change only the nodes that we didnt visited yet
+								int destKey=currentEdge.getDest();
+								double canEdgeWeight = currentEdge.getWeight()+ mygraph.getNode(currentEdge.getSrc()).getWeight();
+								if(mygraph.getNode(destKey).getWeight() > canEdgeWeight) { //if the current weight is bigger then what i found so change
+									//mygraph.getNode(destKey).setInfo(""+mygraph.getNode(currentEdge.getSrc()).getKey());
+									mygraph.getNode(destKey).setWeight(canEdgeWeight);
+								}//+mygraph.getNode(currentEdge.getSrc()).getWeight()
+							}
 						}
 					}
 				}
+				i++;
 			}
-			i++;
+
+			if(mygraph.getNode(dest).getTag()!=0) {
+
+
+				return mygraph.getNode(dest).getWeight();
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
-		if(mygraph.getNode(dest).getTag()!=0) {
-
-			return mygraph.getNode(dest).getWeight();
-		}
-
-
-		else return -1;
+		return -1;
 	}
 
 
@@ -196,64 +204,67 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
 		// TODO Auto-generated method stub
-		List <node_data> ans=new LinkedList<node_data>();
+		try {
+			List <node_data> ans=new LinkedList<node_data>();
 
-		Collection<node_data> nodes=this.mygraph.getV();
-		int size=nodes.size();
-		int i=0;
-		for(node_data currentNode :nodes) { //change the weigh to mat for all
-			currentNode.setWeight(Integer.MAX_VALUE);
-			currentNode.setInfo("");
-		}
-		this.mygraph.getNode(src).setWeight(0); //change the weigh to 0 in the src
-		this.mygraph.getNode(src).setInfo(""+this.mygraph.getNode(src).getKey());
+			Collection<node_data> nodes=this.mygraph.getV();
+			int size=nodes.size();
+			int i=0;
+			for(node_data currentNode :nodes) { //change the weigh to mat for all
+				currentNode.setWeight(Integer.MAX_VALUE);
+				currentNode.setTag(0);
+				currentNode.setInfo("");
+			}
+			this.mygraph.getNode(src).setWeight(0); //change the weigh to 0 in the src
+			this.mygraph.getNode(src).setInfo(""+this.mygraph.getNode(src).getKey());
 
-		
-		while(i!=size) {
-			int MinNotVisited= getMInWeight(nodes); //gets the min weight node that we didnt visited already
-			if(MinNotVisited !=-1 ) {
-				mygraph.getNode(MinNotVisited).setTag(1);
 
-				Collection<edge_data> edges=this.mygraph.getE(MinNotVisited);
-				if(edges!=null) {
-					for(edge_data currentEdge :edges) { //runs all over the adges that goes from current node
-						if(currentEdge.getTag()!=1) { //change only the nodes that we didnt visited yet
-							int destKey=currentEdge.getDest();
-							double canEdgeWeight = currentEdge.getWeight()+ mygraph.getNode(currentEdge.getSrc()).getWeight();
-							if(mygraph.getNode(destKey).getWeight() > canEdgeWeight) { //if the current weight is bigger then what i found so change
-								mygraph.getNode(destKey).setWeight(canEdgeWeight);
-					//			mygraph.getNode(destKey).setInfo(mygraph.getNode(currentEdge.getSrc()).getInfo());
-								String temp=""+mygraph.getNode(MinNotVisited).getKey();
-								mygraph.getNode(destKey).setInfo(temp);
+			while(i!=size) {
+				int MinNotVisited= getMInWeight(nodes); //gets the min weight node that we didnt visited already
+				if(MinNotVisited !=-1 ) {
+					mygraph.getNode(MinNotVisited).setTag(1);
+
+					Collection<edge_data> edges=this.mygraph.getE(MinNotVisited);
+					if(edges!=null) {
+						for(edge_data currentEdge :edges) { //runs all over the adges that goes from current node
+							if(currentEdge.getTag()!=1) { //change only the nodes that we didnt visited yet
+								int destKey=currentEdge.getDest();
+								double canEdgeWeight = currentEdge.getWeight()+ mygraph.getNode(currentEdge.getSrc()).getWeight();
+								if(mygraph.getNode(destKey).getWeight() > canEdgeWeight) { //if the current weight is bigger then what i found so change
+									mygraph.getNode(destKey).setWeight(canEdgeWeight);
+									//			mygraph.getNode(destKey).setInfo(mygraph.getNode(currentEdge.getSrc()).getInfo());
+									String temp=""+mygraph.getNode(MinNotVisited).getKey();
+									mygraph.getNode(destKey).setInfo(temp);
+								}
 							}
 						}
 					}
 				}
+				i++;
 			}
-			i++;
+
+			if(mygraph.getNode(dest).getTag()!=0) {
+
+				ans.add(mygraph.getNode(dest));
+
+				while(mygraph.getNode(dest).getKey()!=mygraph.getNode(src).getKey()) {
+
+					int addNode =Integer.parseInt(mygraph.getNode(dest).getInfo());
+					ans.add(mygraph.getNode(addNode));
+					dest=addNode;
+				}
+				List <node_data> ansRevers=new LinkedList<node_data>();
+
+				for (int j = 0; j < ans.size(); j++) {
+					ansRevers.add(ans.get(ans.size()-1-j));
+
+				}
+				return ansRevers;
+			}
 		}
-
-		if(mygraph.getNode(dest).getTag()!=0) {
-			
-			ans.add(mygraph.getNode(dest));
-					
-			while(mygraph.getNode(dest).getKey()!=mygraph.getNode(src).getKey()) {
-				
-				int addNode =Integer.parseInt(mygraph.getNode(dest).getInfo());
-				ans.add(mygraph.getNode(addNode));
-				dest=addNode;
-			}
-			List <node_data> ansRevers=new LinkedList<node_data>();
-			
-			for (int j = 0; j < ans.size(); j++) {
-				ansRevers.add(ans.get(ans.size()-1-j));
-						
-			}
-			
-			return ansRevers;
+		catch (Exception ex) {
+			ex.printStackTrace();
 		}
-
-
 
 
 		return null;
@@ -262,8 +273,66 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	@Override
 	public List<node_data> TSP(List<Integer> targets) {
 		// TODO Auto-generated method stub
+		try {
+			if(this.isConnected()==true) {
+				double min=Integer.MAX_VALUE;
+				double temp;
+				//int i=-1;
+				int index=0;
+				List <node_data> ans= new LinkedList<node_data>();
+				List <node_data> tempans= new LinkedList<node_data>();
+				//	int one=targets.get(0);
+				//targets.remove(0);
+				//for(Integer mysrc :targets ) {
+				for(int i=0; i<targets.size()-1 ;) {
+					int mysrc= targets.get(i);
+					min=Integer.MAX_VALUE;
 
+					for(Integer mydest :targets ) {
+						if(mydest!=mysrc) {
+							temp=this.shortestPathDist(mysrc, mydest);
+
+							if(temp<min) {
+								min=temp;
+								index=targets.indexOf(mydest);
+							}
+						}
+					}
+					
+					
+					
+					tempans=this.shortestPath(mysrc, targets.get(index));
+					if(tempans!=null)
+						ans.addAll(tempans);
+					//targets.indexOf(mysrc);
+					int temp_remove=targets.get(index);
+					targets.remove(targets.get(index));
+					targets.add(0, temp_remove);
+					
+					targets.remove(	targets.indexOf(mysrc));
+					
+					
+
+				}
+				for(int i=0 ; i<ans.size()-1;i++) {
+					if(ans.get(i)==ans.get(i+1))
+						ans.remove(i);
+				}
+					
+
+				return ans;
+			}
+			else {
+				System.out.println("lalalala");
+				return null;
+
+			}
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		return null;
+
 	}
 
 
