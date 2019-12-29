@@ -1,5 +1,5 @@
 # OPP-Ex2
-![](images/graph.png)
+![](images/graph2.png)
 
 Main purpose of the project is to:  
 * Create directed weighted graph
@@ -49,9 +49,14 @@ Main purpose of the project is to:
 8) ***List<node_data> TSP(List targets)***  --> computes a relatively short path which visit each node in the targets List.  
 
 
-**How to use GUI**  
+**How to use GUI** 
 
-* add node:  just click one time on the window to place new node  
+* Blue dots indicate a node(vetrix)   
+*  line indicate an edge  
+* The yellow dots indicate the direction of the edge.  
+  for example: If there is an edge between nodes 1 and 2 and the point is near to node number 1 it means that the edge is from 2 to 1.  
+* The number next to each yellow dot is the weight of this edge 
+* add node:  just click one time on the window to place new node   
 * add edge: just click on the window to place new node and grab your mouse to the point you want the dest key.  
 * you can also connect between Existing nodes.  
 * The automatic weight that each edge you create in the graph will be 10(can be change with the Change button)  
