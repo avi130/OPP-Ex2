@@ -120,7 +120,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 		for(node_data currentNode :nodes) { 
 
 			for(node_data checkNode :nodes) {
-				if(shortestPathDist(currentNode.getKey(),checkNode.getKey())== -1){
+				if(shortestPathDist(currentNode.getKey(),checkNode.getKey())== Integer.MAX_VALUE){
 					System.out.println(currentNode.getKey());
 					System.out.println(checkNode.getKey());
 					return false;
@@ -337,7 +337,6 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 				return ans;
 			}
 			else {
-				System.out.println("lalalala");
 				return null;
 
 			}
