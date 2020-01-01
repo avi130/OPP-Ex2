@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Queue;
 
 import dataStructure.DGraph;
+import dataStructure.edge;
 import dataStructure.edge_data;
 import dataStructure.graph;
+import dataStructure.node;
 import dataStructure.node_data;
-import elements.edge;
-import elements.node;
 import utils.Point3D;
 /**
  * This empty class represents the set of graph-theory algorithms
@@ -35,8 +35,19 @@ import utils.Point3D;
  */
 public class Graph_Algo implements graph_algorithms, Serializable{
 
-	graph mygraph;
-
+	graph mygraph; 
+	
+	
+	public Graph_Algo ()
+	{
+		this.mygraph=new DGraph();
+	}
+	
+	
+	public Graph_Algo (graph g) {
+		// TODO Auto-generated method stub
+		mygraph=g;
+	}
 
 	@Override
 	public void init(graph g) {
@@ -195,7 +206,7 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 			ex.printStackTrace();
 		}
 
-		return -1;
+		return Integer.MAX_VALUE;
 	}
 
 
@@ -261,6 +272,9 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 				}
 				return ansRevers;
 			}
+			else 
+				ans=null;
+			return ans;
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();

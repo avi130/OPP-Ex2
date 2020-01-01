@@ -43,6 +43,7 @@ public interface graph_algorithms {
  * other node. NOTE: assume directional graph - a valid path (a-->b) does NOT imply a valid path (b-->a).
  * @return
  */
+	
 	public boolean isConnected();
 	/**
 	 * returns the length of the shortest path between src to dest
