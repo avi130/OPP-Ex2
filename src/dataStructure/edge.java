@@ -43,7 +43,10 @@ public class edge implements edge_data ,Serializable{
 		 this.info=info;
 		
 	}
-
+	 public void setWeight(double x) {
+			// TODO Auto-generated method stub
+		 this.weight=x;
+		}
 	
 	@Override
 	public int getSrc() {

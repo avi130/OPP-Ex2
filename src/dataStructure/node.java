@@ -27,6 +27,14 @@ public class node implements node_data,Serializable {
 	
 	}
 	
+	public node(int key,Point3D location) {
+		this.key=key;
+		this.location=location;
+		this.value=Integer.MAX_VALUE;
+		this.weight=0;
+		this.info="";
+		this.tag=0;
+	}
 	
 	
 	
