@@ -584,16 +584,17 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		try {
-			String weight = JOptionPane.showInputDialog(null,"Enter weight for your new edge");
-			int inputweight = Integer.parseInt(weight);
+			int inputweight=10;
 			int x = e.getX();
 			int y = e.getY();
 			Point3D location=new Point3D(x, y);
-			//node p = new node(location);
+			
+			
 			List<node_data> nodes= new LinkedList<node_data>(graph2.getV());
 			boolean flag=false;
-
-			//int temp=nodes.get(nodes.size()).getKey();
+		
+				
+			
 			int temp=nodes.get(nodes.size()-1).getKey();
 			int key=temp;
 
@@ -609,16 +610,17 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 				}
 
 			}
-
+			
+			
 			boolean flag2=true;
 			
 			for(node_data nodekey: nodes)	{
-				if(global_flag && Math.abs(x-nodekey.getLocation().x())<20 && Math.abs(y-nodekey.getLocation().y())<20) {
+				if(global_flag && Math.abs(x-nodekey.getLocation().x())<20 && Math.abs(y-nodekey.getLocation().y())<20) {					
 					graph2.connect( key-1,nodekey.getKey(), inputweight);
 					flag2=false;
 					break;
 				}
-				else if(global_flag==false && Math.abs(x-nodekey.getLocation().x())<20 && Math.abs(y-nodekey.getLocation().y())<20) {
+				else if(global_flag==false && Math.abs(x-nodekey.getLocation().x())<20 && Math.abs(y-nodekey.getLocation().y())<20) {					
 					graph2.connect( global_key ,nodekey.getKey(), inputweight);
 					flag2=false;
 					break;
@@ -704,7 +706,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		// TODO Auto-generated method stub
 		graph g=new DGraph();
 
-		for (int i=1;i<30;i++)
+		for (int i=1;i<20;i++)
 		{
 			int ix=(int)(Math.random()*900)+100;
 			int iy=(int)(Math.random()*900)+100;
@@ -713,12 +715,12 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		}
 		for (int i=0;i<30;i++)
 		{
-			int src=(int)(Math.random()*30);
+			int src=(int)(Math.random()*20);
 			int dst=1;
 			do {
-				dst=(int)(Math.random()*30);
+				dst=(int)(Math.random()*20);
 			}while(dst==src);	
-			int w=(int)(Math.random()*100);
+			int w=(int)(Math.random()*50);
 			g.connect(src, dst, w);
 
 		}
