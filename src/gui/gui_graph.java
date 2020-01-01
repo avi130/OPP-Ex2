@@ -250,6 +250,10 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 			Graph_Algo ga = new Graph_Algo();
 			ga.init(graph2);
 			List <node_data> ans=ga.TSP(nodesList);
+			if(ans==null) {
+				JOptionPane.showMessageDialog(null, "the graph is not heavy connected");
+				return;
+			}
 			String final_ans="";
 			for (int i=0; i<ans.size(); i++) {
 				if(i!=0)
@@ -708,22 +712,12 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
 		for (int i=1;i<20;i++)
 		{
-			int ix=(int)(Math.random()*900)+100;
-			int iy=(int)(Math.random()*900)+100;
+			int ix=(int)(Math.random()*800)+100;
+			int iy=(int)(Math.random()*800)+100;
 			node_data v=new node(i,new Point3D(ix,iy,ix));
 			g.addNode(v);
 		}
-		for (int i=0;i<30;i++)
-		{
-			int src=(int)(Math.random()*20);
-			int dst=1;
-			do {
-				dst=(int)(Math.random()*20);
-			}while(dst==src);	
-			int w=(int)(Math.random()*50);
-			g.connect(src, dst, w);
-
-		}
+		
 
 
 		gui_graph app = new gui_graph(g);
