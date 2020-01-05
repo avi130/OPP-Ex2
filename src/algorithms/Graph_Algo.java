@@ -36,24 +36,34 @@ import utils.Point3D;
 public class Graph_Algo implements graph_algorithms, Serializable{
 
 	graph mygraph; 
-	
-	
+
+
 	public Graph_Algo ()
 	{
 		this.mygraph=new DGraph();
 	}
-	
-	
+
+
 	public Graph_Algo (graph g) {
 		// TODO Auto-generated method stub
 		mygraph=g;
 	}
 
+
+	/**
+	* This method initializes a graph
+	@param Graph represents the graph we received
+	**/
 	@Override
 	public void init(graph g) {
 		// TODO Auto-generated method stub
 		mygraph=g;
 	}
+	
+	/**
+	* This method initializes a graph according to a String we received
+	@param file_name represents the file we received
+	**/
 	@Override
 	public void init(String file_name) {
 
@@ -86,7 +96,10 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	}
 
 
-
+	/**
+	* This method saves a graph as a file
+	@param file_name represents the string we received
+	**/
 	@Override
 	public void save(String file_name) {
 		// TODO Auto-generated method stub
@@ -111,7 +124,9 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 
 	}
 
-
+	/**
+	* This method checks if a graph is heavy connected
+	**/
 	@Override
 	public boolean isConnected() {
 		// TODO Auto-generated method stub
@@ -132,11 +147,10 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 	}
 
 
-
-
-
-
-
+	/**
+	* This method finds the Min Weight between all the Collection
+	@param nodes represents the Collection of nodes
+	**/
 	public int getMInWeight(Collection<node_data> nodes) {
 		// TODO Auto-generated method stub
 		double x=0;
@@ -157,7 +171,11 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 
 
 
-
+	/**
+	* This method finds the shortest distance between 2 points
+	@param src represents the starting point
+	@param dest represents the ending point
+	**/
 	@Override
 	public double shortestPathDist(int src, int dest) {
 		// TODO Auto-generated method stub
@@ -209,9 +227,12 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 		return Integer.MAX_VALUE;
 	}
 
-
-
-
+	
+	/**
+	* This method returns the shortestPath between 2 points in List<node_data> 
+	@param src represents the starting point
+	@param dest represents the ending point
+	**/
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
 		// TODO Auto-generated method stub
@@ -284,62 +305,114 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 		return null;
 	}
 
+
+	/**
+	* check only if the targets List is connectet.
+	@param targets represents a list of vertices
+	**/
+	private boolean ListIsConnected(List<Integer> target){
+		graph newgraph=new DGraph();
+		for (int i = 0; i <target.size() ; i++) {
+			newgraph.addNode(mygraph.getNode(target.get(i)));
+			try{
+				for (edge_data ed: mygraph.getE(target.get(i)) ) {
+					if(target.contains(ed.getDest())){
+						newgraph.connect(ed.getSrc(),ed.getDest(),ed.getWeight());
+					}
+				}
+			}
+			catch (Exception e){
+				return false;
+			}
+		}
+
+		Collection<node_data> nodes=newgraph.getV();
+
+		for(node_data currentNode :nodes) { 
+
+			for(node_data checkNode :nodes) {
+				if(shortestPathDist(currentNode.getKey(),checkNode.getKey())== Integer.MAX_VALUE){
+					System.out.println(currentNode.getKey());
+					System.out.println(checkNode.getKey());
+					return false;
+				}
+
+			}
+		}
+		return true;
+
+
+	}
+
+
+	/**
+	* computes a relatively short path which visit each node in the targets List.
+	@param targets represents a list of vertices
+	**/
 	@Override
 	public List<node_data> TSP(List<Integer> targets) {
 		// TODO Auto-generated method stub
 		try {
-			if(this.isConnected()==true) {
-				double min=Integer.MAX_VALUE;
-				double temp;
-				//int i=-1;
-				int index=0;
-				List <node_data> ans= new LinkedList<node_data>();
-				List <node_data> tempans= new LinkedList<node_data>();
-				//	int one=targets.get(0);
-				//targets.remove(0);
-				//for(Integer mysrc :targets ) {
-				for(int i=0; i<targets.size()-1 ;) {
-					int mysrc= targets.get(i);
-					min=Integer.MAX_VALUE;
+				if(this.ListIsConnected(targets)==true) {
 
-					for(Integer mydest :targets ) {
-						if(mydest!=mysrc) {
-							temp=this.shortestPathDist(mysrc, mydest);
-
-							if(temp<min) {
-								min=temp;
-								index=targets.indexOf(mydest);
-							}
+					List <Integer> t= new LinkedList<Integer>();
+					for(int i=0; i<targets.size(); i++) {
+						if(!t.contains(targets.get(i))) {
+							t.add(targets.get(i));
 						}
 					}
-					
-					
-					
-					tempans=this.shortestPath(mysrc, targets.get(index));
-					if(tempans!=null)
-						ans.addAll(tempans);
-					//targets.indexOf(mysrc);
-					int temp_remove=targets.get(index);
-					targets.remove(targets.get(index));
-					targets.add(0, temp_remove);
-					
-					targets.remove(	targets.indexOf(mysrc));
-					
-					
+
+					double min=Integer.MAX_VALUE;
+					double temp;
+					//int i=-1;
+					int index=0;
+					List <node_data> ans= new LinkedList<node_data>();
+					List <node_data> tempans= new LinkedList<node_data>();
+					//	int one=t.get(0);
+					//t.remove(0);
+					//for(Integer mysrc :t ) {
+					for(int i=0; i<t.size()-1 ;) {
+						int mysrc= t.get(i);
+						min=Integer.MAX_VALUE;
+
+						for(Integer mydest :t ) {
+							if(mydest!=mysrc) {
+								temp=this.shortestPathDist(mysrc, mydest);
+
+								if(temp<min) {
+									min=temp;
+									index=t.indexOf(mydest);
+								}
+							}
+						}
+
+
+
+						tempans=this.shortestPath(mysrc, t.get(index));
+						if(tempans!=null)
+							ans.addAll(tempans);
+						//t.indexOf(mysrc);
+						int temp_remove=t.get(index);
+						t.remove(t.get(index));
+						t.add(0, temp_remove);
+
+						t.remove(	t.indexOf(mysrc));
+
+
+
+					}
+					for(int i=0 ; i<ans.size()-1;i++) {
+						if(ans.get(i)==ans.get(i+1))
+							ans.remove(i);
+					}
+
+
+					return ans;
+				}
+				else {
+					return null;
 
 				}
-				for(int i=0 ; i<ans.size()-1;i++) {
-					if(ans.get(i)==ans.get(i+1))
-						ans.remove(i);
-				}
-					
-
-				return ans;
-			}
-			else {
-				return null;
-
-			}
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -350,8 +423,9 @@ public class Graph_Algo implements graph_algorithms, Serializable{
 
 
 
-
-
+	/**
+	* This method Compute a deep copy of this graph.
+	**/
 	@Override
 	public graph copy() {//made with Serializable copy(same as save\read from file)
 		// TODO Auto-generated method stub
