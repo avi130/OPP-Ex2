@@ -167,6 +167,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		isConnected= new JButton("changeWaight");
 
 		Change.add(item9);
+		this.initMcThread();
 		
 
 
@@ -710,45 +711,76 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		
 	}
 	
+	
+	public int getMc() {
+		return this.mc;
+	}
+	
+	/**
+	 * Function to init mc thread This thread is listening to changes on the graph
+	 * (by mc value)
+	 */
+	private void initMcThread() {
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					synchronized (graph2) {
+						if (graph2.getMC() != mc) {
+							mc = graph2.getMC();
+							repaint();
+						}
+					}
+				}
+			}
+		});
+		t.start();
+	}
+	
+	
 
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		graph g=new DGraph();
-/*
-		for (int i=1;i<20;i++)
-		{
-			int ix=(int)(Math.random()*800)+100;
-			int iy=(int)(Math.random()*800)+100;
-			node_data v=new node(i,new Point3D(ix,iy,ix));
-			g.addNode(v);
-		}
+			graph graph=new DGraph();
+	 
+			gui_graph g = new gui_graph();
+	        g.initGUI(graph);
+	        g.setVisible(true);
+	        
+	       graph.addNode(new node(1, new Point3D(350, 400, 350), 0));
+	        graph.addNode(new node(2, new Point3D(900, 325, 50), 0));
+	        graph.addNode(new node(3, new Point3D(250, 700, 10), 0));
+	        graph.addNode(new node(4, new Point3D(550, 400, 140), 0));
+	        graph.addNode(new node(5, new Point3D(135, 600, 250), 0));
+	        graph.addNode(new node(6, new Point3D(930, 850, 350), 0));
+	        graph.addNode(new node(7, new Point3D(630, 650, 350), 0));
+	        graph.addNode(new node(8, new Point3D(530, 100, 350), 0));
+	        graph.addNode(new node(9, new Point3D(870, 570, 370), 0));
+	        graph.addNode(new node(10, new Point3D(100, 100, 250), 0));
+	      
+	        graph.connect(1,2,8);
+	        graph.connect(2,1,10);
+	        graph.connect(2,3,1);
+	        graph.connect(3,2,2);
+	        graph.connect(3,4,2);
+	        graph.connect(4,5,2);
+	        graph.connect(5,3,15);
+	        graph.connect(2,6,20);
+	        graph.connect(1,10,30);
+	        graph.connect(6,7,22);
+	        graph.connect(6,8,60);
+	        graph.connect(7,3,7);
+	        graph.connect(8,9,7);
+	        graph.connect(9,2,19);
+	        graph.connect(9,8,8);
+	        graph.connect(10,8,7);
+	        graph.connect(10,6,2);
+	        graph.connect(9,5,3);
+	        graph.connect(2,5,21);
+	       
+	      
+	       
+	    }
 		
-		for (int i=1;i<70;i++)
-		{
-			int x=(int)(Math.random()*20);
-			int y=(int)(Math.random()*20);
-			int w=(int)(Math.random()*50);
-			
-			g.connect(x, y, w);
-		}
-		
-*/		
-		
-		for (int i=0;i<5;i++)
-		{
-			int ix=(int)(Math.random()*800)+100;
-			int iy=(int)(Math.random()*800)+100;
-			node_data v=new node(i,new Point3D(ix,iy,ix));
-			g.addNode(v);
-		}
-		
-		g.addNode(new node(7, new Point3D(800,500)));
-
-		gui_graph app = new gui_graph(g);
-		app.setVisible(true);
-
-
-
-	}
 }
