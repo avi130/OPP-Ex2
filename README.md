@@ -5,6 +5,7 @@ Main purpose of the project is to:
 * Create directed weighted graph
 * Display the graph on graphic user interface 
 * Run algorithms on the graph.
+* create a data structure that will save\load graph 
 
  **Class Node contains:**
 
