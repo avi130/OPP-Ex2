@@ -48,8 +48,9 @@ import utils.Point3D;
 
 public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
-	public static boolean global_flag;
-	public static int global_key;
+	private static boolean global_flag;
+	private static int global_key;
+	private int mc;
 
 	MenuItem Node;
 	//JTextField tf;
@@ -65,7 +66,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
 
 	int key;
-	DGraph graph;
+	//DGraph graph;
 
 	Point3D p;
 	graph graph2;
@@ -73,6 +74,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
 	public gui_graph(graph g) {
 		this.graph2=g;
+		this.mc=g.getMC();
 		initGUI();
 	}
 
@@ -92,6 +94,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
 	private void initGUI() 
 	{
+		
 		this.setSize(1500, 1500);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -155,7 +158,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		Remove.add(item7);
 		Remove.add(item8);
 
-		Menu Change = new Menu("Change");
+		Menu Change = new Menu("Change/create");
 		menuBar.add(Change);
 		this.setMenuBar(menuBar);
 
@@ -164,6 +167,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		isConnected= new JButton("changeWaight");
 
 		Change.add(item9);
+		
 
 
 
@@ -171,7 +175,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 	}
 
 
-
+	@Override
 	public void paint(Graphics g)
 	{
 		super.paint(g);
@@ -251,7 +255,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 			ga.init(graph2);
 			List <node_data> ans=ga.TSP(nodesList);
 			if(ans==null) {
-				JOptionPane.showMessageDialog(null, "the graph is not heavy connected");
+				JOptionPane.showMessageDialog(null, "the graph is not connected");
 				return;
 			}
 			String final_ans="";
@@ -287,6 +291,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
 	}
 
+	
 	private void removeedge() {
 		String src = JOptionPane.showInputDialog(null,"Enter Node");
 		String dest = JOptionPane.showInputDialog(null,"Enter To");
@@ -307,8 +312,8 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
 
 	private void changeWaight() {
-		String src = JOptionPane.showInputDialog(null,"Enter Node");
-		String dest = JOptionPane.showInputDialog(null,"Enter To");
+		String src = JOptionPane.showInputDialog(null,"Enter src");
+		String dest = JOptionPane.showInputDialog(null,"Enter dest");
 		String weight = JOptionPane.showInputDialog(null,"Enter weight");
 		int inputsrc = Integer.parseInt(src);
 		int inputdest = Integer.parseInt(dest);
@@ -702,14 +707,15 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 
 			changeWaight();
 		}
-
-
+		
 	}
+	
+
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		graph g=new DGraph();
-
+/*
 		for (int i=1;i<20;i++)
 		{
 			int ix=(int)(Math.random()*800)+100;
@@ -718,7 +724,26 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 			g.addNode(v);
 		}
 		
-
+		for (int i=1;i<70;i++)
+		{
+			int x=(int)(Math.random()*20);
+			int y=(int)(Math.random()*20);
+			int w=(int)(Math.random()*50);
+			
+			g.connect(x, y, w);
+		}
+		
+*/		
+		
+		for (int i=0;i<5;i++)
+		{
+			int ix=(int)(Math.random()*800)+100;
+			int iy=(int)(Math.random()*800)+100;
+			node_data v=new node(i,new Point3D(ix,iy,ix));
+			g.addNode(v);
+		}
+		
+		g.addNode(new node(7, new Point3D(800,500)));
 
 		gui_graph app = new gui_graph(g);
 		app.setVisible(true);
