@@ -35,14 +35,12 @@ class Graph_AlgoTest {
         ga.connect(14, 13, 2);
         TestGraph.init(ga);
     }
-    @Test
-    void initByString() {
-
-    }
+    
+    
+  
 
     @Test
     void isConnected() {
-        System.out.println("There are no Dest edges to the Node 10, and isConnected is: "+TestGraph.isConnected());
         ga.connect(11, 10, 0);
         TestGraph.init(ga);
         assertEquals(true,TestGraph.isConnected());
@@ -50,12 +48,18 @@ class Graph_AlgoTest {
 
     @Test
     void shortestPathDist() {
+    	 assertEquals(TestGraph.shortestPathDist(10,14), 1);
         assertEquals(3,TestGraph.shortestPathDist(10,13));
+       
     }
 
     @Test
     void shortestPath() {
         assertEquals(TestGraph.shortestPath(13,10),null);
+        List<node_data> finalChek=new LinkedList<node_data>();
+        finalChek.add(ga.getNode(10));
+        finalChek.add(ga.getNode(14));
+        assertEquals(TestGraph.shortestPath(10,14), finalChek);
     }
 
     @Test
@@ -67,7 +71,18 @@ class Graph_AlgoTest {
         lst.add(13);
         lst.add(14);
         lst.add(12);
-        System.out.println(TestGraph.TSP(lst));
+        List<Integer> ans=new LinkedList<Integer>();
+        ans.add(10);
+        ans.add(14);
+        ans.add(13);
+        ans.add(12);
+        List<node_data> check=TestGraph.TSP(lst);
+        List<Integer> finalChek=new LinkedList<Integer>();
+        
+        for (int i = 0; i < check.size(); i++) {
+        	finalChek.add(check.get(i).getKey());
+		}
+        assertEquals(finalChek,ans);
     }
 
     @Test
@@ -77,4 +92,27 @@ class Graph_AlgoTest {
         assertEquals(g.nodeSize(),5);
         assertEquals(g.edgeSize(),9);
     }
+
+
+@Test
+void testInitSaveToFile() {
+	TestGraph.save("Test.txt");
+	
+	
+	Graph_Algo copy = new Graph_Algo();
+	copy.init("Test.txt");
+	
+	graph copy_g = copy.copy();
+	
+	assertEquals(ga.nodeSize(), copy_g.nodeSize());
+	
 }
+
+}
+
+
+
+
+
+
+
