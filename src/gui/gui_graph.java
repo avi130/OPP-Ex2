@@ -167,7 +167,7 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		isConnected= new JButton("changeWaight");
 
 		Change.add(item9);
-		this.initMcThread();
+		
 		
 
 
@@ -716,37 +716,15 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 		return this.mc;
 	}
 	
-	/**
-	 * Function to init mc thread This thread is listening to changes on the graph
-	 * (by mc value)
-	 */
-	private void initMcThread() {
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					synchronized (graph2) {
-						if (graph2.getMC() != mc) {
-							mc = graph2.getMC();
-							repaint();
-						}
-					}
-				}
-			}
-		});
-		t.start();
-	}
-	
+
 	
 
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 			graph graph=new DGraph();
-	 
 			gui_graph g = new gui_graph();
-	        g.initGUI(graph);
-	        g.setVisible(true);
+	       
 	        
 	       graph.addNode(new node(1, new Point3D(350, 400, 350), 0));
 	        graph.addNode(new node(2, new Point3D(900, 325, 50), 0));
@@ -778,7 +756,9 @@ public class gui_graph extends JFrame implements ActionListener, MouseListener {
 	        graph.connect(10,6,2);
 	        graph.connect(9,5,3);
 	        graph.connect(2,5,21);
-	       
+	        
+	        g.initGUI(graph);
+	        g.setVisible(true);
 	      
 	       
 	    }
