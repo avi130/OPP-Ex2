@@ -168,40 +168,34 @@ public class DGraph implements graph,Serializable {
 	@Override
 	public node_data removeNode(int key) {
 		// TODO Auto-generated method stub
-		try {
-			if(hmap1.containsKey(key)) {
-				node_data temp=hmap1.get(key);
-				for(Entry<Integer, node_data> entry : hmap1.entrySet()) {
-					int currentKey=entry.getKey();
-					if(currentKey==key && hmap2.containsKey(key)) {
-						int a=hmap2.get(key).size();
-						hmap2.remove(key);
-						//hmap1.remove(key);
-						edgesize=edgesize-a;
-						break;
-
-					}
-					if(currentKey!=key && hmap2.containsKey(currentKey)) {
-
-						if(hmap2.get(currentKey).containsKey(key)) {
-							int a=hmap2.get(currentKey).size();
-							hmap2.get(currentKey).remove(key);
-							edgesize=edgesize-a;
-							break;
-						}
-
-					}
-				}
-				hmap1.remove(key);
-				MC++;
-				return temp;	
-			}
+	
+		try {	
+		node_data temp;
+        if(hmap1.containsKey(key)){
+            temp = this.hmap1.get(key);
+        }
+        else{return null;}
+        if (hmap1.get(key) != null) {
+            int x = hmap2.get(key).size();
+            hmap2.remove(key);
+            edgesize -= x;
+        }
+        for (int it: hmap2.keySet()) {
+            if (hmap2.get(it).containsKey(key)) {
+            	hmap2.get(it).remove(key);
+            	edgesize--;
+            }
+        }
+        hmap1.remove(key);// remove the node of the key
+        MC++;
+        return temp;
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
 		return null;
+		
 	}
 	
 	/**
