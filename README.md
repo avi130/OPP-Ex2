@@ -40,14 +40,14 @@ Main purpose of the project is to:
 
 **Class Graph_Algo functions:**
 
-1) ***init(graph g)***  --> Init this set of algorithms on the parameter - graph.  
-2) ***graph copy()***  --> Compute a deep copy of this graph.  
-3) ***init(String file_name)***  --> Init a graph from file.  
-4) ***save(String file_name)***  --> Saves the graph to a file.  
-5) ***isConnected()***  --> eturns true if graph is strongly connected.  
-6) ***shortestPathDist(int src, int dest)***  --> returns the length of the shortest path between src to dest.  
-7) ***List<node_data> shortestPath(int src, int dest)***  --> returns the the shortest path between src to dest - as an ordered List of nodes.  
-8) ***List<node_data> TSP(List targets)***  --> computes a relatively short path which visit each node in the targets List.  
+1) ***init(graph g)***    
+2) ***graph copy()***   
+3) ***init(String file_name)***    
+4) ***save(String file_name)***   
+5) ***isConnected()***    
+6) ***shortestPathDist(int src, int dest)***  
+7) ***List<node_data> shortestPath(int src, int dest)***  
+8) ***List<node_data> TSP(List targets)***   
 
 
 **How to use GUI** 
